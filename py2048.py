@@ -14,7 +14,7 @@ Created by Jason Crouse, 9/30/17
 
 # initialize constants for the tile size, buffer between tiles, and the window
 # dimensions
-TILE_DIMEN = 80
+TILE_DIMEN = 100
 BUFFER = 5
 WINDOW_DIMEN = (TILE_DIMEN * 4) + (5 * BUFFER)
 TILE_COLOR = (255, 255, 198)
@@ -107,15 +107,7 @@ class Grid:
                 a_row.append(Tile(row, column, None))
             the_grid.append(a_row)
 
-        # initializes two random tiles that have value 2
-        num_tiles = 0
-        while num_tiles < 2:
-            row = randint(0, 3)
-            col = randint(0, 3)
-
-            if the_grid[row][col].value != 2:
-                the_grid[row][col] = Tile(row, col, 2)
-                num_tiles += 1
+        self.spawn_twos(2, the_grid)
 
         self.grid = the_grid
 
@@ -125,10 +117,29 @@ class Grid:
         :param surface: the surface on which the grid will be drawn
         :return:
         """
-
         for arr in self.grid:
             for tile in arr:
                 tile.draw_tile(surface)
+
+    def spawn_twos(self, num_twos, the_grid):
+        # initializes two random tiles that have value 2
+        num_tiles = 0
+        num_tries = 0
+        while num_tiles < num_twos and num_tries < 2000:
+            row = randint(0, 3)
+            col = randint(0, 3)
+
+            if the_grid[row][col].value is None:
+                the_grid[row][col] = Tile(row, col, 2)
+                num_tiles += 1
+            num_tries += 1
+
+        # ends the game if we get stuck in a loop while trying to spawn new
+        # tiles, indicating that the board is full
+        if num_tries >= 2000:
+            global game_over
+            game_over = True
+
 
     # TODO can this be abstracted?
     def go_down(self):
@@ -137,6 +148,7 @@ class Grid:
                 this_one = self.grid[col][row]
                 to_the_down = self.grid[col][row + 1]
                 this_one.collide_with(to_the_down)
+        self.spawn_twos(1, self.grid)
 
     def go_left(self):
         for row in range(4):
@@ -144,6 +156,7 @@ class Grid:
                 this_one = self.grid[col][row]
                 to_the_left = self.grid[col - 1][row]
                 this_one.collide_with(to_the_left)
+        self.spawn_twos(1, self.grid)
 
     def go_right(self):
         for row in range(4):
@@ -151,6 +164,7 @@ class Grid:
                 this_one = self.grid[col][row]
                 to_the_right = self.grid[col + 1][row]
                 this_one.collide_with(to_the_right)
+        self.spawn_twos(1, self.grid)
 
     def go_up(self):
         for col in range(4):
@@ -158,13 +172,14 @@ class Grid:
                 this_one = self.grid[col][row]
                 to_the_down = self.grid[col][row - 1]
                 this_one.collide_with(to_the_down)
+        self.spawn_twos(1, self.grid)
 
 # ---------- Actually runs the 2048 game! ----------
 
 # Initialize PyGame, set window size, create the screen
 pygame.init()
 pygame.display.set_caption("py2048")
-size = (WINDOW_DIMEN, WINDOW_DIMEN)
+size = (WINDOW_DIMEN, WINDOW_DIMEN + (WINDOW_DIMEN // 8))
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 grid = Grid(TILE_DIMEN, BUFFER)
@@ -175,7 +190,7 @@ score = 0
 finished = False
 game_over = False
 while not finished:
-    # handle events
+    # ---------- handle key events or quitting ----------
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             finished = True
@@ -191,13 +206,18 @@ while not finished:
             elif event.key == pygame.K_DOWN:
                 grid.go_down()
 
-    # TODO implement game rules
-
     # ---------- draw the game ---------
 
     # fill the background, then draw the grid and update the surface
     screen.fill((0, 0, 0))
     grid.draw_grid(screen)
+
+    # adds the score to the screen
+    text = font.render("Score: " + str(score), True, (255, 255, 255))
+    text_rect = text.get_rect()
+    x_val = screen.get_width() / 2 - text_rect.width / 2
+    y_val = screen.get_height() - int(1.3 * text_rect.height)
+    screen.blit(text, [x_val, y_val])
 
     # draws the game over screen if the game is over
     if game_over:
