@@ -8,10 +8,6 @@ hackathon with help from programarcadegames.com and the pygame documentation..
 Created by Jason Crouse, 9/30/17
 """
 
-# TODO LIST
-# [] scoring
-# [] implement game rules (spawning new tiles)
-
 # initialize constants for the tile size, buffer between tiles, and the window
 # dimensions
 TILE_DIMEN = 100
@@ -30,7 +26,8 @@ class Tile:
     """
     def __init__(self, x, y, value):
         """
-        Initializes the Tile
+        Initializes the Tile.
+
         :param x: the x-coordinate of the tile in grid coordinates, not pixels
         :param y: the y-coordinate of the tile in grid coordinates, not pixels
         :param value: the value of the Tile which will always be 2^n where n > 0
@@ -66,6 +63,7 @@ class Tile:
     def collide_with(self, other_tile):
         """
         Handles collisions between two tiles.
+
         :param other_tile: Tile
         """
         # TODO
@@ -83,6 +81,9 @@ class Tile:
 
 
 class Grid:
+    """
+    Represents the grid of the game, in which the tiles exist and move around.
+    """
     def __init__(self, cell_dimen, buffer):
         """
         Initializes the grid for the game, with the cells being squares of
@@ -142,8 +143,7 @@ class Grid:
             global game_over
             game_over = True
 
-
-    # TODO can this be abstracted?
+    # TODO can these be abstracted?
     def go_down(self):
         for col in range(4):
             for row in range(3):
@@ -233,5 +233,5 @@ while not finished:
     pygame.display.flip()
 
 
-# Close the window and quit after the game ends
+# Close the window and quit after the game ends (the window is exited)
 pygame.quit()
