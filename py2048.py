@@ -3,7 +3,7 @@ from random import randint
 
 """
 Python implementation of the game 2048, created with pygame for the HuskyHacks3
-hackathon using programarcadegames.com and the pygame documentation for help.
+hackathon with help from programarcadegames.com and the pygame documentation..
 
 Created by Jason Crouse, 9/30/17
 """
