@@ -124,6 +124,19 @@ class Grid:
             for tile in arr:
                 tile.draw_tile(surface)
 
+    # TODO do these, will probably abstract in the end but separate for now
+    def go_down(self):
+        pass
+
+    def go_left(self):
+        pass
+
+    def go_right(self):
+        pass
+
+    def go_up(self):
+        pass
+
 
 # ---------- Actually runs the 2048 game! ----------
 
@@ -141,10 +154,21 @@ score = 0
 finished = False
 game_over = False
 while not finished:
-    # checking to see if the user has quit the game
+    # handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             finished = True
+        elif event.type == pygame.KEYDOWN:
+            # Figure out if it was an arrow key. If so
+            # adjust speed.
+            if event.key == pygame.K_LEFT:
+                grid.go_left()
+            elif event.key == pygame.K_RIGHT:
+                grid.go_right()
+            elif event.key == pygame.K_UP:
+                grid.go_up()
+            elif event.key == pygame.K_DOWN:
+                grid.go_down()
 
     # TODO implement game rules and keyboard handling
 
