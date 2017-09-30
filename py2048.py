@@ -60,7 +60,7 @@ class Tile:
 
         if self.value is not None:
             font = pygame.font.SysFont("Arial", TILE_DIMEN)
-            val = font.render(str(self.value), False, (0, 0, 0))
+            val = font.render(str(self.value), True, (0, 0, 0))
             x_val = self.x * (TILE_DIMEN + BUFFER) + BUFFER + (TILE_DIMEN / 3)
             y_val = self.y * (TILE_DIMEN + BUFFER) + BUFFER + (TILE_DIMEN / 6)
             surface.blit(val, (x_val, y_val))
@@ -134,22 +134,36 @@ size = (WINDOW_DIMEN, WINDOW_DIMEN)
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 grid = Grid(TILE_DIMEN, BUFFER)
-
+font = pygame.font.SysFont("Arial", WINDOW_DIMEN // 8)
 
 # main game loop
 score = 0
+finished = False
 game_over = False
-while not game_over:
+while not finished:
+    # checking to see if the user has quit the game
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            game_over = True
+            finished = True
+
+    # TODO implement game rules and keyboard handling
+
+    # ---------- draw the game ---------
 
     # fill the background, then draw the grid and update the surface
     screen.fill((0, 0, 0))
     grid.draw_grid(screen)
-    pygame.display.flip()
 
-# TODO display game over screen with score here!!!
+    # draws the game over screen if the game is over
+    if game_over:
+        screen.fill((255, 255, 255))
+        text = font.render("Game Over. Score: " + str(score), True, (0, 0, 0))
+        text_rect = text.get_rect()
+        x_val = screen.get_width() / 2 - text_rect.width / 2
+        y_val = screen.get_height() / 2 - text_rect.height / 2
+        screen.blit(text, [x_val, y_val])
+
+    pygame.display.flip()
 
 
 # Close the window and quit after the game ends
