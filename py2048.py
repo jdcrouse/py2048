@@ -9,10 +9,9 @@ Created by Jason Crouse, 9/30/17
 """
 
 # TODO LIST
-# [] display tile values
-# [] random setup with only two tiles of value 2, the rest empty (how to do mt?)
-# [] scoring
 # [] interpret keyboard input (left, right, up, down)
+# [] handle collisions
+# [] scoring
 # [] implement game rules
 
 # initialize constants for the tile size, buffer between tiles, and the window
@@ -64,6 +63,14 @@ class Tile:
             val = font.render(str(self.value), False, (0, 0, 0))
             surface.blit(val, (self.x * (TILE_DIMEN + BUFFER) + BUFFER,
                                self.y * (TILE_DIMEN + BUFFER) + BUFFER))
+
+    def collide_with(self, other_tile):
+        """
+        Handles collisions between two tiles.
+        :param other_tile: Tile
+        """
+        # TODO
+        pass
 
 
 class Grid:
