@@ -9,10 +9,8 @@ Created by Jason Crouse, 9/30/17
 """
 
 # TODO LIST
-# [] interpret keyboard input (left, right, up, down)
-# [] handle collisions
 # [] scoring
-# [] implement game rules
+# [] implement game rules (spawning new tiles)
 
 # initialize constants for the tile size, buffer between tiles, and the window
 # dimensions
@@ -71,7 +69,15 @@ class Tile:
         :param other_tile: Tile
         """
         # TODO
-        pass
+        if self.value is None:
+            return
+        elif other_tile.value is None:
+            other_tile.value = self.value
+            self.value = None
+        elif self.value == other_tile.value:
+            other_tile.value *= 2
+            self.value = None
+        return
 
 
 class Grid:
@@ -124,19 +130,34 @@ class Grid:
             for tile in arr:
                 tile.draw_tile(surface)
 
-    # TODO do these, will probably abstract in the end but separate for now
+    # TODO can this be abstracted?
     def go_down(self):
-        pass
+        for col in range(4):
+            for row in range(3):
+                this_one = self.grid[col][row]
+                to_the_down = self.grid[col][row + 1]
+                this_one.collide_with(to_the_down)
 
     def go_left(self):
-        pass
+        for row in range(4):
+            for col in range(3, 0, -1):
+                this_one = self.grid[col][row]
+                to_the_left = self.grid[col - 1][row]
+                this_one.collide_with(to_the_left)
 
     def go_right(self):
-        pass
+        for row in range(4):
+            for col in range(3):
+                this_one = self.grid[col][row]
+                to_the_right = self.grid[col + 1][row]
+                this_one.collide_with(to_the_right)
 
     def go_up(self):
-        pass
-
+        for col in range(4):
+            for row in range(3, 0, -1):
+                this_one = self.grid[col][row]
+                to_the_down = self.grid[col][row - 1]
+                this_one.collide_with(to_the_down)
 
 # ---------- Actually runs the 2048 game! ----------
 
@@ -170,7 +191,7 @@ while not finished:
             elif event.key == pygame.K_DOWN:
                 grid.go_down()
 
-    # TODO implement game rules and keyboard handling
+    # TODO implement game rules
 
     # ---------- draw the game ---------
 
