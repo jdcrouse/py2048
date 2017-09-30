@@ -1,4 +1,5 @@
 import pygame
+from random import randint
 
 """
 Python implementation of the game 2048, created with pygame for the HuskyHacks3
@@ -120,10 +121,12 @@ class Grid:
 
 # Initialize PyGame, set window size, create the screen
 pygame.init()
+pygame.display.set_caption("py2048")
 size = (WINDOW_DIMEN, WINDOW_DIMEN)
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 grid = Grid(TILE_DIMEN, BUFFER)
+
 
 # main game loop
 score = 0
