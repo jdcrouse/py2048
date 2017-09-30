@@ -19,7 +19,8 @@ Created by Jason Crouse, 9/30/17
 TILE_DIMEN = 80
 BUFFER = 5
 WINDOW_DIMEN = (TILE_DIMEN * 4) + (5 * BUFFER)
-TILE_COLOR = (220,220,220)
+TILE_COLOR = (255, 255, 198)
+CELL_COLOR = (220,220,220)
 BUFFER_COLOR = (255, 255, 255)
 
 
@@ -34,7 +35,8 @@ class Tile:
         Initializes the Tile
         :param x: the x-coordinate of the tile in grid coordinates, not pixels
         :param y: the y-coordinate of the tile in grid coordinates, not pixels
-        :param value: the value of the Tile (will always be 2^n where n > 0)
+        :param value: the value of the Tile which will always be 2^n where n > 0
+                      or None to represent an empty cell
         """
         self.value = value
         self.x = x
@@ -46,10 +48,21 @@ class Tile:
 
         :param surface: the surface on which the tile will be drawn
         """
-        pygame.draw.rect(surface, TILE_COLOR,
+        if self.value is None:
+            color = CELL_COLOR
+        else:
+            color = TILE_COLOR
+
+        pygame.draw.rect(surface, color,
                          [self.x * (TILE_DIMEN + BUFFER) + BUFFER,
                           self.y * (TILE_DIMEN + BUFFER) + BUFFER,
                           TILE_DIMEN, TILE_DIMEN])
+
+        if self.value is not None:
+            font = pygame.font.SysFont("Arial", TILE_DIMEN)
+            val = font.render(str(self.value), False, (0, 0, 0))
+            surface.blit(val, (self.x * (TILE_DIMEN + BUFFER) + BUFFER,
+                               self.y * (TILE_DIMEN + BUFFER) + BUFFER))
 
 
 class Grid:
@@ -72,14 +85,23 @@ class Grid:
         which starts with two randomly placed tiles of value 2. Only allowed
         to be called when a new Grid object is created.
         """
-        # this variable is for randomizing later:
-        # num_tiles = 0
         the_grid = []
         for row in range(4):
             a_row = []
             for column in range(4):
-                a_row.append(Tile(row, column, 2))
+                a_row.append(Tile(row, column, None))
             the_grid.append(a_row)
+
+        # initializes two random tiles that have value 2
+        num_tiles = 0
+        while num_tiles < 2:
+            row = randint(0, 3)
+            col = randint(0, 3)
+
+            if the_grid[row][col].value != 2:
+                the_grid[row][col] = Tile(row, col, 2)
+                num_tiles += 1
+
         self.grid = the_grid
 
     def draw_grid(self, surface):
