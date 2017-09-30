@@ -61,8 +61,9 @@ class Tile:
         if self.value is not None:
             font = pygame.font.SysFont("Arial", TILE_DIMEN)
             val = font.render(str(self.value), False, (0, 0, 0))
-            surface.blit(val, (self.x * (TILE_DIMEN + BUFFER) + BUFFER,
-                               self.y * (TILE_DIMEN + BUFFER) + BUFFER))
+            x_val = self.x * (TILE_DIMEN + BUFFER) + BUFFER + (TILE_DIMEN / 3)
+            y_val = self.y * (TILE_DIMEN + BUFFER) + BUFFER + (TILE_DIMEN / 6)
+            surface.blit(val, (x_val, y_val))
 
     def collide_with(self, other_tile):
         """
