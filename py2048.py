@@ -77,6 +77,8 @@ class Tile:
         elif self.value == other_tile.value:
             other_tile.value *= 2
             self.value = None
+            global score
+            score += other_tile.value
         return
 
 
